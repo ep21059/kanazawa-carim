@@ -324,7 +324,7 @@ def load_resources(index_path, model_name, checkpoint_path):
     return model, keys, embeddings, masks, scene_map, resolved_paths, tokenizer
 
 def main():
-    st.set_page_config(layout="wide", page_title="CARIM: Context-Aware Retrieval with Video Playback")
+    st.set_page_config(layout="wide", page_title="文脈認識型動画検索ビューアー")
     
     import argparse
     parser = argparse.ArgumentParser()
