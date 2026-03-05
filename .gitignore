@@ -1,0 +1,5 @@
+runs/
+datasets/
+__pycache__/
+*.sif
+src_datasets
