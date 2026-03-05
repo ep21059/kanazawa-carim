@@ -202,7 +202,7 @@ def render_video_player(sid, scene_map, unique_id, highlight_path=None):
                      html = f"""
                      <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
                          <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ Frame {f_idx+1}/{len(subset_frames)} (Match!)</h4>
-                         <img src="data:image/jpeg;base64,{{b64}}" style="width: 100%; border-radius: 4px;">
+                         <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px;">
                      </div>
                      """
                      img_container.markdown(html, unsafe_allow_html=True)
@@ -221,8 +221,8 @@ def render_video_player(sid, scene_map, unique_id, highlight_path=None):
                      b64 = base64.b64encode(bf.read()).decode("utf-8")
                 html = f"""
                 <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
-                    <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ {{msg}} (Match!)</h4>
-                    <img src="data:image/jpeg;base64,{{b64}}" style="width: 100%; border-radius: 4px;">
+                    <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ {msg} (Match!)</h4>
+                    <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px;">
                 </div>
                 """
                 img_container.markdown(html, unsafe_allow_html=True)
