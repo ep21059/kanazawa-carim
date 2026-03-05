@@ -200,9 +200,9 @@ def render_video_player(sid, scene_map, unique_id, highlight_path=None):
                      with open(f_path, "rb") as bf:
                          b64 = base64.b64encode(bf.read()).decode("utf-8")
                      html = f"""
-                     <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
-                         <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ Frame {f_idx+1}/{len(subset_frames)} (Match!)</h4>
-                         <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px;">
+                     <div style="position: relative; border: 4px solid #ef5350; box-shadow: 0 0 15px rgba(239, 83, 80, 0.5); border-radius: 8px; padding: 4px; background: #222; margin-bottom: 10px;">
+                         <div style="position: absolute; top: 12px; left: 12px; background: #ef5350; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; z-index: 10; font-family: sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">🎯 MATCH</div>
+                         <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px; display: block;">
                      </div>
                      """
                      img_container.markdown(html, unsafe_allow_html=True)
@@ -220,9 +220,9 @@ def render_video_player(sid, scene_map, unique_id, highlight_path=None):
                 with open(current_path, "rb") as bf:
                      b64 = base64.b64encode(bf.read()).decode("utf-8")
                 html = f"""
-                <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
-                    <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ {msg} (Match!)</h4>
-                    <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px;">
+                <div style="position: relative; border: 4px solid #ef5350; box-shadow: 0 0 15px rgba(239, 83, 80, 0.5); border-radius: 8px; padding: 4px; background: #222; margin-bottom: 10px;">
+                    <div style="position: absolute; top: 12px; left: 12px; background: #ef5350; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; z-index: 10; font-family: sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">🎯 MATCH</div>
+                    <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px; display: block;">
                 </div>
                 """
                 img_container.markdown(html, unsafe_allow_html=True)
