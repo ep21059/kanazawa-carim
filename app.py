@@ -6,6 +6,7 @@ import sys
 import json
 import glob
 import time
+import base64
 from transformers import AutoTokenizer
 
 # Ensure models module is visible
@@ -193,10 +194,20 @@ def render_video_player(sid, scene_map, unique_id, highlight_path=None):
         for f_idx in range(len(subset_frames)):
             f_path = subset_frames[f_idx][1]
             msg = f"Frame {f_idx+1}/{len(subset_frames)} (Playing)"
-            if highlight_path and subset_frames[f_idx][1] == highlight_path:
-                 msg += " ⭐ Match"
-            img_container.image(f_path, caption=msg, use_container_width=True)
-            time.sleep(0.1) # 10 FPS for smoother playback
+            if highlight_path and f_path == highlight_path:
+                 with open(f_path, "rb") as bf:
+                     b64 = base64.b64encode(bf.read()).decode("utf-8")
+                 html = f"""
+                 <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
+                     <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ Frame {f_idx+1}/{len(subset_frames)} (Match!)</h4>
+                     <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px;">
+                 </div>
+                 """
+                 img_container.markdown(html, unsafe_allow_html=True)
+                 time.sleep(0.5) # Pause slightly longer on the match frame
+            else:
+                 img_container.image(f_path, caption=msg, use_container_width=True)
+                 time.sleep(0.1) # 10 FPS for smoother playback
         
         st.session_state[vid_key] = False
         st.rerun()
@@ -205,8 +216,17 @@ def render_video_player(sid, scene_map, unique_id, highlight_path=None):
         current_path = subset_frames[frame_pos][1]
         msg = f"Frame {frame_pos+1}/{len(subset_frames)} (Paused)"
         if highlight_path and current_path == highlight_path:
-            msg += " (⭐ Match)"
-        img_container.image(current_path, caption=msg, use_container_width=True)
+            with open(current_path, "rb") as bf:
+                 b64 = base64.b64encode(bf.read()).decode("utf-8")
+            html = f"""
+            <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
+                <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ {msg} (Match!)</h4>
+                <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px;">
+            </div>
+            """
+            img_container.markdown(html, unsafe_allow_html=True)
+        else:
+            img_container.image(current_path, caption=msg, use_container_width=True)
         return current_path
 
     return None
@@ -402,7 +422,7 @@ def main():
     # --- Sidebar Filters ---
     st.sidebar.header("🔍 Filters & Modes")
     
-    mode = st.sidebar.radio("モード (Mode)", ["Search (検索)", "Browse All (全シーン確認)"])
+    mode = st.sidebar.radio("モード", ["検索", "全シーン確認"])
     
     # --- システム設定 (変更可能) ---
     with st.sidebar.expander("⚙️ 設定", expanded=False):
@@ -523,10 +543,10 @@ def main():
     st.sidebar.subheader("フィルタ設定")
     
     all_weather = ["rain", "night", "day", "cloudy"] # Example
-    f_weather = st.sidebar.multiselect("天候 (Weather)", all_weather)
+    f_weather = st.sidebar.multiselect("天候", all_weather)
     
     all_times = ["Day", "Night"]
-    f_time = st.sidebar.multiselect("時間帯 (Time)", all_times)
+    f_time = st.sidebar.multiselect("時間帯", all_times)
     
     min_score = st.sidebar.slider("最小スコア", 0.0, 1.0, 0.0)
     
