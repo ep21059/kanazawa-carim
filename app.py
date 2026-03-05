@@ -188,48 +188,48 @@ def render_video_player(sid, scene_map, unique_id, highlight_path=None):
         )
 
     img_container = st.empty()
+    current_path = subset_frames[frame_pos][1]
     
-    if st.session_state[vid_key]:
-        # Playback
-        for f_idx in range(len(subset_frames)):
-            f_path = subset_frames[f_idx][1]
-            msg = f"Frame {f_idx+1}/{len(subset_frames)} (Playing)"
-            if highlight_path and f_path == highlight_path:
-                 with open(f_path, "rb") as bf:
-                     b64 = base64.b64encode(bf.read()).decode("utf-8")
-                 html = f"""
-                 <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
-                     <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ Frame {f_idx+1}/{len(subset_frames)} (Match!)</h4>
-                     <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px;">
-                 </div>
-                 """
-                 img_container.markdown(html, unsafe_allow_html=True)
-                 time.sleep(0.5) # Pause slightly longer on the match frame
-            else:
-                 img_container.image(f_path, caption=msg, use_container_width=True)
-                 time.sleep(0.1) # 10 FPS for smoother playback
-        
-        st.session_state[vid_key] = False
-        st.rerun()
-    else:
-        # Static
-        current_path = subset_frames[frame_pos][1]
-        msg = f"Frame {frame_pos+1}/{len(subset_frames)} (Paused)"
-        if highlight_path and current_path == highlight_path:
-            with open(current_path, "rb") as bf:
-                 b64 = base64.b64encode(bf.read()).decode("utf-8")
-            html = f"""
-            <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
-                <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ {msg} (Match!)</h4>
-                <img src="data:image/jpeg;base64,{b64}" style="width: 100%; border-radius: 4px;">
-            </div>
-            """
-            img_container.markdown(html, unsafe_allow_html=True)
+    def _do_playback():
+        if st.session_state[vid_key]:
+            # Playback
+            for f_idx in range(len(subset_frames)):
+                f_path = subset_frames[f_idx][1]
+                msg = f"Frame {f_idx+1}/{len(subset_frames)} (Playing)"
+                if highlight_path and f_path == highlight_path:
+                     with open(f_path, "rb") as bf:
+                         b64 = base64.b64encode(bf.read()).decode("utf-8")
+                     html = f"""
+                     <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
+                         <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ Frame {f_idx+1}/{len(subset_frames)} (Match!)</h4>
+                         <img src="data:image/jpeg;base64,{{b64}}" style="width: 100%; border-radius: 4px;">
+                     </div>
+                     """
+                     img_container.markdown(html, unsafe_allow_html=True)
+                     time.sleep(0.5) # Pause slightly longer on the match frame
+                else:
+                     img_container.image(f_path, caption=msg, use_container_width=True)
+                     time.sleep(0.1) # 10 FPS for smoother playback
+            
+            st.session_state[vid_key] = False
+            st.rerun()
         else:
-            img_container.image(current_path, caption=msg, use_container_width=True)
-        return current_path
+            # Static
+            msg = f"Frame {frame_pos+1}/{len(subset_frames)} (Paused)"
+            if highlight_path and current_path == highlight_path:
+                with open(current_path, "rb") as bf:
+                     b64 = base64.b64encode(bf.read()).decode("utf-8")
+                html = f"""
+                <div style="border: 6px solid white; box-shadow: 0 0 20px white; border-radius: 8px; padding: 4px; background: white; margin-bottom: 10px;">
+                    <h4 style="color: black; margin: 0 0 5px 0; font-family: sans-serif;">⭐ {{msg}} (Match!)</h4>
+                    <img src="data:image/jpeg;base64,{{b64}}" style="width: 100%; border-radius: 4px;">
+                </div>
+                """
+                img_container.markdown(html, unsafe_allow_html=True)
+            else:
+                img_container.image(current_path, caption=msg, use_container_width=True)
 
-    return None
+    return current_path, _do_playback
 
 # --- Cache & Resources ---
 @st.cache_resource
@@ -499,7 +499,7 @@ def main():
                         
                         # Body (Stacked: Video -> Info)
                         # Video
-                        current_path_browse = render_video_player(sid, scene_map, unique_id=f"browse_{sid}")
+                        current_path_browse, pb_func = render_video_player(sid, scene_map, unique_id=f"browse_{sid}")
                         
                         # Info
                         if current_path_browse:
@@ -524,6 +524,9 @@ def main():
                             </div>
                         </div>
                         """, unsafe_allow_html=True)
+                        
+                        # Execute playback AFTER info is rendered
+                        pb_func()
                         
                         # Spacer
                         st.write("")
@@ -642,13 +645,11 @@ def main():
                 c1, c2 = st.columns([1.5, 1])
 
                 with c1:
-                    # Render Video Player with Highlight
-                    current_frame_path = render_video_player(res["sid"], scene_map, unique_id=f"rank_{i}", highlight_path=res["path"])
+                    # Render Video Player with Highlight controls initially
+                    current_frame_path, pb_func = render_video_player(res["sid"], scene_map, unique_id=f"rank_{i}", highlight_path=res["path"])
                     
                 with c2:
                     # Dynamic Details based on current frame from player
-                    # render_video_player returns currently displayed path (if static) or None (if playing/init)
-                    # Use fallback if None
                     if not current_frame_path: current_frame_path = res["path"]
                     
                     is_match = (current_frame_path == res["path"])
@@ -770,6 +771,10 @@ def main():
 
                     with st.expander("Caption"):
                         st.write(current_caption)
+                
+                # Execute playback loop AFTER the right side finishes rendering
+                with c1:
+                     pb_func()
                 
                 st.divider()
 
