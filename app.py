@@ -19,7 +19,7 @@ def get_scene_id(filename):
     """
     Kanazawaファイル名からScene IDを抽出。
     全フレームが同じプレフィックスを持つため、タイムスタンプを利用して
-    およそ300フレーム（約30秒）ごとの仮想的なシーンIDを生成します。
+    およそ100フレーム（約10秒）ごとの仮想的なシーンIDを生成します。
     ex: 20250127_151151_367912100_1.jpg -> 20250127_151151_scene001
     """
     basename = os.path.basename(filename)
@@ -28,8 +28,8 @@ def get_scene_id(filename):
         prefix = f"{parts[0]}_{parts[1]}"
         try:
             ts = int(parts[2])
-            # Assuming TS increments by ~100 per frame. Grouping by roughly 30000 units (300 frames)
-            chunk_id = ts // 30000
+            # Assuming TS increments by ~100 per frame. Grouping by roughly 10000 units (100 frames / 10 seconds)
+            chunk_id = ts // 10000
             return f"{prefix}_scene{chunk_id:04d}"
         except:
             return prefix
