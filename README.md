@@ -1,6 +1,6 @@
 # CARIM: Kanazawa Dataset Fine-Tuning Pipeline
 
-このディレクトリ（`kanazawa_ver`）は、CARIMモデルを「金沢データセット（Kanazawa Dataset）」向けに特化させるため（パターンA：ドメイン特化型適応）、パイプラインと実行環境を独立させたバージョンです。
+このディレクトリ（`kanazawa_ver`）は、CARIMモデルを「金沢データセット（Kanazawa Dataset）」向けに特化させるため、パイプラインと実行環境を独立させたバージョンです。
 
 ## ディレクトリ構成
 - `scripts/`: データセット構築、キャプション生成、要素抽出、インデックス生成などを行うPythonスクリプト群です。（元実装からKanazawa用にパスを最適化済み）
