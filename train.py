@@ -40,8 +40,8 @@ def scene_collate_fn(batch):
 def main():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--jsonl_path", type=str, default="/home/ryoc1220/data/carim/nuscenes_vlm/processed/train.jsonl")
-    parser.add_argument("--elements_path", type=str, default="/home/ryoc1220/data/carim/nuscenes_vlm/captions_elements.json")
+    parser.add_argument("--jsonl_path", type=str, default="/home/ryoc1220/shared/datasets/carim/nuscenes_vlm/processed/train.jsonl")
+    parser.add_argument("--elements_path", type=str, default="/home/ryoc1220/shared/datasets/carim/nuscenes_vlm/captions_elements.json")
     parser.add_argument("--epochs", type=int, default=3, help="エポック数")
     parser.add_argument("--batch_size", type=int, default=4, help="バッチサイズ (対照学習のため大きめを推奨)") 
     parser.add_argument("--save_path", type=str, default="runs/carim_text_model.pt", help="モデル保存パス")

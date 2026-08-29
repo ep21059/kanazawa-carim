@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=16G
 #SBATCH --time=24:00:00
-#SBATCH --output=/home/ryoc1220/work/kanazawa-carim/runs/app_kanazawa_%j.out
-#SBATCH --error=/home/ryoc1220/work/kanazawa-carim/runs/app_kanazawa_%j.err
+#SBATCH --output=/home/ryoc1220/research/kanazawa-carim/experiments/runs/app_kanazawa_%j.out
+#SBATCH --error=/home/ryoc1220/research/kanazawa-carim/experiments/runs/app_kanazawa_%j.err
 
 set -e
 
@@ -18,8 +18,8 @@ echo "To access, create an SSH tunnel from your local machine:"
 echo "ssh -N -f -L ${PORT}:$(hostname):${PORT} ryoc1220@<YOUR_CLUSTER_IP>"
 
 singularity exec --nv \
-  --bind /home/ryoc1220/projects/carim:/workspace \
-  /home/ryoc1220/containers/carim_qwen.sif \
+  --bind /home/ryoc1220/research/carim:/workspace \
+  /home/ryoc1220/shared/containers/carim_qwen.sif \
   bash -c "
   export PYTHONPATH=/workspace:\$PYTHONPATH
   cd /workspace/kanazawa_ver

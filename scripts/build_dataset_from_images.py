@@ -5,8 +5,8 @@ import glob
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image_dir", type=str, default="/home/ryoc1220/data/kanazawa/kanazawa_scene/samples/CAM_FRONT")
-    parser.add_argument("--output_path", type=str, default="/home/ryoc1220/data/kanazawa/kanazawa_scene/processed/train.jsonl")
+    parser.add_argument("--image_dir", type=str, default="/home/ryoc1220/shared/datasets/kanazawa/kanazawa_scene/samples/CAM_FRONT")
+    parser.add_argument("--output_path", type=str, default="/home/ryoc1220/shared/datasets/kanazawa/kanazawa_scene/processed/train.jsonl")
     args = parser.parse_args()
     
     image_dir = args.image_dir

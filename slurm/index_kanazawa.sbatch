@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=16G
 #SBATCH --time=24:00:00
-#SBATCH --output=/home/ryoc1220/work/kanazawa-carim/runs/index_kanazawa_%j.out
-#SBATCH --error=/home/ryoc1220/work/kanazawa-carim/runs/index_kanazawa_%j.err
+#SBATCH --output=/home/ryoc1220/research/kanazawa-carim/experiments/runs/index_kanazawa_%j.out
+#SBATCH --error=/home/ryoc1220/research/kanazawa-carim/experiments/runs/index_kanazawa_%j.err
 
 #SLACK: notify-start
 #SLACK: notify-end
@@ -15,8 +15,8 @@
 set -e
 
 singularity exec --nv \
-  --bind /home/ryoc1220/projects/carim:/workspace \
-  /home/ryoc1220/containers/carim_qwen.sif \
+  --bind /home/ryoc1220/research/carim:/workspace \
+  /home/ryoc1220/shared/containers/carim_qwen.sif \
   bash -c '
   export PYTHONPATH=/workspace:$PYTHONPATH
   cd /workspace/kanazawa_ver
