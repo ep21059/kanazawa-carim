@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=MergeKanazawa
-#SBATCH --output=/home/ryoc1220/carim_ver1/kanazawa_ver/runs/merge_%j.out
-#SBATCH --error=/home/ryoc1220/carim_ver1/kanazawa_ver/runs/merge_%j.err
+#SBATCH --output=/home/ryoc1220/work/kanazawa-carim/runs/merge_%j.out
+#SBATCH --error=/home/ryoc1220/work/kanazawa-carim/runs/merge_%j.err
 #SBATCH --partition=a6000_ada
 #SBATCH --time=00:10:00
 #SBATCH --mem=8G
@@ -10,8 +10,8 @@
 #SLACK: notify-end
 #SLACK: notify-error
 
-cd /home/ryoc1220/carim_ver1/kanazawa_ver
-export PYTHONPATH=/home/ryoc1220/carim_ver1/kanazawa_ver:$PYTHONPATH
+cd /home/ryoc1220/projects/kanazawa-carim
+export PYTHONPATH=/home/ryoc1220/projects/kanazawa-carim:$PYTHONPATH
 
 python3 scripts/merge_full_dataset.py \
     --train_jsonl datasets/kanazawa_scene/processed/train.jsonl \

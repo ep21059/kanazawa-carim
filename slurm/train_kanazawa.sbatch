@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=TrainKanazawa
-#SBATCH --output=/home/ryoc1220/carim_ver1/kanazawa_ver/runs/train_%j.out
-#SBATCH --error=/home/ryoc1220/carim_ver1/kanazawa_ver/runs/train_%j.err
+#SBATCH --output=/home/ryoc1220/work/kanazawa-carim/runs/train_%j.out
+#SBATCH --error=/home/ryoc1220/work/kanazawa-carim/runs/train_%j.err
 #SBATCH --partition=a6000
 #SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
@@ -14,8 +14,8 @@
 set -e
 
 singularity exec --nv \
-  --bind /home/ryoc1220/carim_ver1:/workspace \
-  /home/ryoc1220/carim_ver1/kanazawa_ver/carim_qwen.sif \
+  --bind /home/ryoc1220/projects/carim:/workspace \
+  /home/ryoc1220/containers/carim_qwen.sif \
   bash -c '
   export PYTHONPATH=/workspace/kanazawa_ver:$PYTHONPATH
   cd /workspace/kanazawa_ver
